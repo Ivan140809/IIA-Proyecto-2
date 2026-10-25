@@ -3,7 +3,7 @@
 #include <stdexcept>
 
 TrapezoidalSet::TrapezoidalSet(const std::string& nombre, double a, double b, double c, double d) : DiffuseSet(nombre), a(a), b(b), c(c), d(d) {
-    if(!(a <= b && b<=c && c<=d)) {
+    if(!(a <= b && b<=c && c<=d) || a == d) {
         throw std::invalid_argument("trapezoidal '" + nombre + "': se requiere a <= b <= c <= d y a < d, se recibió " + formatearPuntos({a, b, c, d}));
     }
 }

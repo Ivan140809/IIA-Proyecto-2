@@ -45,7 +45,7 @@ inline double aNumero(const std::string& s) {
     } catch(const std::exception&) {
 
     }
-    throw std::invalid_argument( s + "no es un numero valido");
+    throw std::invalid_argument("'" + s + "' no es un numero valido");
 }
 }
 

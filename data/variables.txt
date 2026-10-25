@@ -1,0 +1,18 @@
+
+# Entrada 1: valora el ARTÍCULO con descuento ofrecido (%)
+VARIABLE  Descuento  ENTRADA  0  50  %
+CONJUNTO  Bajo       TRAPEZOIDAL  0   0  10  20
+CONJUNTO  Medio      TRIANGULAR  10  25  40
+CONJUNTO  Alto       TRAPEZOIDAL 30  40  50  50
+
+# Entrada 2: valora la INTENCIÓN de compra y la necesidad del producto (0-10)
+VARIABLE  Necesidad  ENTRADA  0  10  puntos
+CONJUNTO  Baja       TRAPEZOIDAL  0   0   2   4
+CONJUNTO  Media      TRIANGULAR   2   5   8
+CONJUNTO  Alta       TRAPEZOIDAL  6   8  10  10
+
+# Salida: certeza de realizar la compra 
+VARIABLE  Compra     SALIDA   0  100  %
+CONJUNTO  NoComprar  TRAPEZOIDAL  0   0  20  40
+CONJUNTO  Pensarlo   TRIANGULAR  25  50  75
+CONJUNTO  Comprar    TRAPEZOIDAL 60  80 100 100
