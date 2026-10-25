@@ -45,7 +45,7 @@ const LinguisticVariable* KnowledgeBase::buscarVariable(
     const std::string& nombre,
     const std::vector<LinguisticVariable>& variables) const {
     for (const auto& var : variables) {
-        if (texto::iguales(var.getNombre(), nombre)) {
+        if (iguales(var.getNombre(), nombre)) {
             return &var;
         }
     }
@@ -110,12 +110,12 @@ void KnowledgeBase::cargarDesdeArchivo(const std::string& rutaArchivo,
                                      "SI <Var1> ES <Conjunto1> Y <Var2> ES <Conjunto2> ENTONCES <VarSalida> ES <ConjuntoSalida>");
         }
 
-        if (!texto::iguales(tokens[0], "SI") ||
-            !texto::iguales(tokens[2], "ES") ||
-            !texto::iguales(tokens[4], "Y") ||
-            !texto::iguales(tokens[6], "ES") ||
-            !texto::iguales(tokens[8], "ENTONCES") ||
-            !texto::iguales(tokens[10], "ES")) {
+        if (!iguales(tokens[0], "SI") ||
+            !iguales(tokens[2], "ES") ||
+            !iguales(tokens[4], "Y") ||
+            !iguales(tokens[6], "ES") ||
+            !iguales(tokens[8], "ENTONCES") ||
+            !iguales(tokens[10], "ES")) {
             throw std::runtime_error("Error en " + rutaArchivo + ", línea " + std::to_string(numLinea) +
                                      ": Palabras clave incorrectas. Debe seguir la estructura: "
                                      "SI ... ES ... Y ... ES ... ENTONCES ... ES ...");
@@ -129,7 +129,7 @@ void KnowledgeBase::cargarDesdeArchivo(const std::string& rutaArchivo,
             Proposition ant2 = validarYCrearProposicion(tokens[5], tokens[7], VariableType::ENTRADA, variables, numLinea);
 
             // No pueden ser la misma variable de entrada
-            if (texto::iguales(ant1.getVariableNombre(), ant2.getVariableNombre())) {
+            if (iguales(ant1.getVariableNombre(), ant2.getVariableNombre())) {
                 throw std::invalid_argument("Línea " + std::to_string(numLinea) +
                                             ": Los antecedentes deben corresponder a dos variables de entrada distintas.");
             }
@@ -143,10 +143,10 @@ void KnowledgeBase::cargarDesdeArchivo(const std::string& rutaArchivo,
                 varEntrada2 = ant2.getVariable();
                 varSalida = consec.getVariable();
             } else {
-                bool ordenDirecto = (texto::iguales(ant1.getVariableNombre(), varEntrada1->getNombre()) &&
-                                     texto::iguales(ant2.getVariableNombre(), varEntrada2->getNombre()));
-                bool ordenInverso = (texto::iguales(ant1.getVariableNombre(), varEntrada2->getNombre()) &&
-                                     texto::iguales(ant2.getVariableNombre(), varEntrada1->getNombre()));
+                bool ordenDirecto = (iguales(ant1.getVariableNombre(), varEntrada1->getNombre()) &&
+                                     iguales(ant2.getVariableNombre(), varEntrada2->getNombre()));
+                bool ordenInverso = (iguales(ant1.getVariableNombre(), varEntrada2->getNombre()) &&
+                                     iguales(ant2.getVariableNombre(), varEntrada1->getNombre()));
 
                 if (not ordenDirecto && not ordenInverso) {
                     throw std::invalid_argument("Línea " + std::to_string(numLinea) +
@@ -154,7 +154,7 @@ void KnowledgeBase::cargarDesdeArchivo(const std::string& rutaArchivo,
                                                 varEntrada1->getNombre() + ", " + varEntrada2->getNombre() + ").");
                 }
 
-                if (!texto::iguales(consec.getVariableNombre(), varSalida->getNombre())) {
+                if (!iguales(consec.getVariableNombre(), varSalida->getNombre())) {
                     throw std::invalid_argument("Línea " + std::to_string(numLinea) +
                                                 ": Regla inconsistente con la variable de salida definida anteriormente (" +
                                                 varSalida->getNombre() + ").");
@@ -228,7 +228,7 @@ void KnowledgeBase::mostrarActivaciones() const {
         std::cout << "   " << std::left
                   << std::setw(6)  << idStr
                   << std::setw(74) << r.toString()
-                  << std::setw(14) << texto::formatear(alpha, 4)
+                  << std::setw(14) << formatear(alpha, 4)
                   << (alpha > 0.0 ? " *" : "")
                   << "\n";
     }
