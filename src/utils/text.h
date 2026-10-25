@@ -14,8 +14,6 @@
  * variable que ingrese por el txt.
  */
 
-namespace texto {
-
 /** Devuelve una copia de s en mayusculas*/
 inline std::string aMayus(std::string s) {
     std::transform(s.begin(), s.end(), s.begin(),[] (unsigned char c) {return static_cast<char>(std::toupper(c)); });
@@ -46,7 +44,6 @@ inline double aNumero(const std::string& s) {
 
     }
     throw std::invalid_argument("'" + s + "' no es un numero valido");
-}
 }
 
 #endif

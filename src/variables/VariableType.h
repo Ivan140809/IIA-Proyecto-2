@@ -26,8 +26,8 @@ inline std::string tipoATexto(VariableType tipo) {
  */
 
 inline VariableType tipoDesdeTexto(const std::string& texto) {
-    if(texto::iguales(texto,"ENTRADA")) return VariableType::ENTRADA;
-    if(texto::iguales(texto, "SALIDA")) return VariableType::SALIDA;
+    if(iguales(texto,"ENTRADA")) return VariableType::ENTRADA;
+    if(iguales(texto, "SALIDA")) return VariableType::SALIDA;
     throw std::invalid_argument("tipo de variable '" + texto + "' inválido");
 }
 

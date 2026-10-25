@@ -36,7 +36,7 @@ std::string DiffuseSet::formatearPuntos(std::initializer_list<double> puntos) {
         if(!primero) {
             resultado += ", ";
         }
-        resultado+= texto::formatear(p);
+        resultado+= formatear(p);
         primero = false;
     }
     return resultado + ")";

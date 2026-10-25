@@ -25,7 +25,7 @@ std::vector<LinguisticVariable> VariableCharger::cargar(const std::string& ruta)
             continue; // linea vacia o solo comentario
         }
         try {
-            std::string palabraClave = texto::aMayus(campos[0]);
+            std::string palabraClave = aMayus(campos[0]);
             if (palabraClave == "VARIABLE") {
                 variables.push_back(crearVariable(campos));
             } else if (palabraClave == "CONJUNTO") {
@@ -55,7 +55,7 @@ std::vector<LinguisticVariable> VariableCharger::cargar(const std::string& ruta)
 // VARIABLE <nombre> <ENTRADA|SALIDA> <min> <max> <unidad>
 LinguisticVariable VariableCharger::crearVariable(const std::vector<std::string>& campos) {
     exigirCampos(campos, 6, "VARIABLE <nombre> <ENTRADA|SALIDA> <min> <max> <unidad>");
-    return LinguisticVariable(campos[1], tipoDesdeTexto(campos[2]), texto::aNumero(campos[3]), texto::aNumero(campos[4]), campos[5]);
+    return LinguisticVariable(campos[1], tipoDesdeTexto(campos[2]), aNumero(campos[3]), aNumero(campos[4]), campos[5]);
 }
 
 
@@ -65,15 +65,15 @@ std::unique_ptr<DiffuseSet> VariableCharger::crearConjunto(const std::vector<std
         throw std::invalid_argument("formato esperado: Conjunto <nombre> <TRIANGULAR|TRAPEZOIDAL> <puntos...>");
     }
     const std::string& nombre = campos[1];
-    std::string forma = texto::aMayus(campos[2]);
+    std::string forma = aMayus(campos[2]);
 
     if (forma == "TRIANGULAR") {
         exigirCampos(campos, 6, "CONJUNTO <nombre> TRIANGULAR <a> <b> <c>");
-        return std::make_unique<TriangularSet>(nombre, texto::aNumero(campos[3]), texto::aNumero(campos[4]), texto::aNumero(campos[5]));
+        return std::make_unique<TriangularSet>(nombre, aNumero(campos[3]), aNumero(campos[4]), aNumero(campos[5]));
     }
     if (forma == "TRAPEZOIDAL") {
         exigirCampos(campos, 7, "CONJUNTO <nombre> TRAPEZOIDAL <a> <b> <c> <d>");
-        return std::make_unique<TrapezoidalSet>(nombre, texto::aNumero(campos[3]), texto::aNumero(campos[4]), texto::aNumero(campos[5]), texto::aNumero(campos[6]));
+        return std::make_unique<TrapezoidalSet>(nombre, aNumero(campos[3]), aNumero(campos[4]), aNumero(campos[5]), aNumero(campos[6]));
     }
     throw std::invalid_argument("forma '" + campos[2] + "' desconocida (use TRIANGULAR o TRAPEZOIDAL)");
 }
