@@ -13,17 +13,11 @@
 class Proposition {
 public:
     Proposition() : conjuntoPtr(nullptr), variablePtr(nullptr) {}
+    Proposition(const std::string& variableNombre, const std::string& conjuntoNombre, const DiffuseSet* conjuntoPtr = nullptr, const LinguisticVariable* variablePtr = nullptr) :variableNombre(variableNombre), conjuntoNombre(conjuntoNombre), conjuntoPtr(conjuntoPtr), variablePtr(variablePtr) {}
 
-    Proposition(const std::string& variableNombre,
-                const std::string& conjuntoNombre,
-                const DiffuseSet* conjuntoPtr = nullptr,
-                const LinguisticVariable* variablePtr = nullptr)
-        : variableNombre(variableNombre),
-          conjuntoNombre(conjuntoNombre),
-          conjuntoPtr(conjuntoPtr),
-          variablePtr(variablePtr) {}
-
-    const std::string& getVariableNombre() const { return variableNombre; }
+    const std::string& getVariableNombre() const {
+         return variableNombre; 
+        }
     const std::string& getConjuntoNombre() const { return conjuntoNombre; }
     const DiffuseSet* getConjunto() const { return conjuntoPtr; }
     const LinguisticVariable* getVariable() const { return variablePtr; }
@@ -37,7 +31,7 @@ public:
     }
 
     std::string toString() const {
-        return variableNombre + " ES " + conjuntoNombre;
+        return variableNombre + " es " + conjuntoNombre;
     }
 
 private:

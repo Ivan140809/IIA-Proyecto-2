@@ -11,8 +11,7 @@
  */
 class InferenceEngine {
 public:
-    InferenceEngine(const KnowledgeBase& base, LinguisticVariable& entrada1,
-                    LinguisticVariable& entrada2, const LinguisticVariable& salida);
+    InferenceEngine(const KnowledgeBase& base, LinguisticVariable& entrada1, LinguisticVariable& entrada2, const LinguisticVariable& salida);
 
     /**
      * Etapa 3: para cada conjunto de la variable de salida, calcula el

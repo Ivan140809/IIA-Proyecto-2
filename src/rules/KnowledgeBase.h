@@ -18,7 +18,6 @@
 class KnowledgeBase {
 
     std::vector<Rule> reglas;
-
     const LinguisticVariable* varEntrada1;
     const LinguisticVariable* varEntrada2;
     const LinguisticVariable* varSalida;
@@ -27,14 +26,8 @@ class KnowledgeBase {
     static std::string quitarComentarios(const std::string& linea);
     static std::vector<std::string> tokenizar(const std::string& linea);
 
-    const LinguisticVariable* buscarVariable(const std::string& nombre,
-                                             const std::vector<LinguisticVariable>& variables) const;
-
-    Proposition validarYCrearProposicion(const std::string& nombreVar,
-                                         const std::string& nombreConjunto,
-                                         VariableType tipoEsperado,
-                                         const std::vector<LinguisticVariable>& variables,
-                                         int numLinea);
+    const LinguisticVariable* buscarVariable(const std::string& nombre, const std::vector<LinguisticVariable>& variables) const;
+    Proposition validarYCrearProposicion(const std::string& nombreVar, const std::string& nombreConjunto, VariableType tipoEsperado, const std::vector<LinguisticVariable>& variables, int numLinea);
 public:
     KnowledgeBase();
     KnowledgeBase(const std::string& rutaArchivo, const std::vector<LinguisticVariable>& variables);

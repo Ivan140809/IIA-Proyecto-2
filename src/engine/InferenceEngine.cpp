@@ -4,8 +4,7 @@
 
 using namespace std;
 
-InferenceEngine::InferenceEngine(const KnowledgeBase& base, LinguisticVariable& entrada1, 
-        LinguisticVariable& entrada2, const LinguisticVariable& salida) : 
+InferenceEngine::InferenceEngine(const KnowledgeBase& base, LinguisticVariable& entrada1, LinguisticVariable& entrada2, const LinguisticVariable& salida) : 
     base(base), entrada1(entrada1), entrada2(entrada2), salida(salida) {}
 
 vector<double> InferenceEngine::agregar() const {
@@ -26,7 +25,7 @@ vector<double> InferenceEngine::agregar() const {
     }
 
     // Mostrar el resultado (traza)
-    cout << "\n=== AGREGACION ===\n";
+    cout << " Agregacion ";
     for (size_t j = 0; j < conjuntos.size(); j++) {
         cout << "   " << salida.getNombre() << " ES " << conjuntos[j]->getNombre()
              << "  ->  alpha = " << alphas[j] << "\n";
@@ -60,10 +59,10 @@ double InferenceEngine::defuzzificar(const vector<double>& alphas) const {
         denominador += mu;
     }
 
-    cout << "\n=== DEFUZZIFICACION (centroide) ===\n";
+    cout << " Defuzzificacion";
     if (denominador == 0.0) {
         // Ninguna regla se activó: no hay figura que promediar
-        cout << "   Ninguna regla se activo; se retorna el centro del universo.\n";
+        cout << "   Ninguna regla se activo; se retorna el centro";
         return (inicio + fin) / 2.0;
     }
 
@@ -73,13 +72,13 @@ double InferenceEngine::defuzzificar(const vector<double>& alphas) const {
 }
 
 double InferenceEngine::inferir(double valor1, double valor2) {
-    cout << "\n=== ETAPA 1: FUZZIFICACION ===\n";
+    cout << "\ Fuzzificacion \n";
     entrada1.fuzzificar(valor1);
     entrada2.fuzzificar(valor2);
     entrada1.mostrarFuzzificacion();
     entrada2.mostrarFuzzificacion();
 
-    cout << "\n=== ETAPA 2: EVALUACION DE REGLAS ===\n";
+    cout << " Evaluacion de reglas ";
     base.mostrarActivaciones();
 
     // Etapas 3 y 4 (ya imprimen su propia traza)

@@ -1,13 +1,7 @@
 #include "Rule.h"
 
 Rule::Rule(int id,
-           const Proposition& antecedente1,
-           const Proposition& antecedente2,
-           const Proposition& consecuente)
-    : id(id),
-      antecedente1(antecedente1),
-      antecedente2(antecedente2),
-      consecuente(consecuente) {}
+const Proposition& antecedente1,const Proposition& antecedente2, const Proposition& consecuente): id(id), antecedente1(antecedente1), antecedente2(antecedente2),consecuente(consecuente) {}
 
 int Rule::getId() const {
     return id;
@@ -30,9 +24,7 @@ double Rule::calcularActivacion() const {
 }
 
 std::string Rule::toString() const {
-    return "SI " + antecedente1.toString() +
-           " Y " + antecedente2.toString() +
-           " ENTONCES " + consecuente.toString();
+    return "Si " + antecedente1.toString() + " y" + antecedente2.toString() + " Entonces " + consecuente.toString();
 }
 
 std::ostream& operator<<(std::ostream& os, const Rule& regla) {

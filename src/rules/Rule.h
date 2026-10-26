@@ -12,17 +12,13 @@
  * SI <Ant1> Y <Ant2> ENTONCES <Consec>
  */
 class Rule {
-
     int id;
     Proposition antecedente1;
     Proposition antecedente2;
     Proposition consecuente;
 
 public:
-    Rule(int id,
-            const Proposition& antecedente1,
-            const Proposition& antecedente2,
-            const Proposition& consecuente);
+    Rule(int id, const Proposition& antecedente1, const Proposition& antecedente2, const Proposition& consecuente);
 
     int getId() const;
     const Proposition& getAntecedente1() const;
