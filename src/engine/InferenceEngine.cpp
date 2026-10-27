@@ -4,8 +4,7 @@
 
 using namespace std;
 
-InferenceEngine::InferenceEngine(const KnowledgeBase& base, LinguisticVariable& entrada1, 
-        LinguisticVariable& entrada2, const LinguisticVariable& salida) : 
+InferenceEngine::InferenceEngine(const KnowledgeBase& base, LinguisticVariable& entrada1, LinguisticVariable& entrada2, const LinguisticVariable& salida) : 
     base(base), entrada1(entrada1), entrada2(entrada2), salida(salida) {}
 
 vector<double> InferenceEngine::agregar() const {
@@ -32,8 +31,10 @@ vector<double> InferenceEngine::agregar() const {
         }
     }
 
-    // Traza: mostrar el alpha final de cada conjunto de salida
+    // mostrar el alpha final de cada conjunto de salida
     cout << "\n   AGREGACION \n";
+    cout << " Agregacion ";
+
     for (size_t j = 0; j < conjuntos.size(); j++) {
         cout << "   " << salida.getNombre() << " ES " << conjuntos[j]->getNombre()
              << "  ->  alpha = " << alphas[j] << "\n";
@@ -71,7 +72,8 @@ double InferenceEngine::defuzzificar(const vector<double>& alphas) const {
         denominador += mu;
     }
 
-    cout << "\n   DEFUZZIFICACION (centroide)\n";
+
+    cout << "\n   DEFUZZIFICACION\n";
     if (denominador == 0.0) {
         // Ninguna regla se activó: no hay figura que promediar (evita dividir por 0).
         // Se retorna el centro del universo como valor por defecto.

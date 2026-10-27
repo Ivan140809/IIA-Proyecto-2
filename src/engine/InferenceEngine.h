@@ -13,27 +13,27 @@ class InferenceEngine {
         const LinguisticVariable& salida;
 
     public:
-    InferenceEngine(const KnowledgeBase& base, LinguisticVariable& entrada1,
+        InferenceEngine(const KnowledgeBase& base, LinguisticVariable& entrada1,
                     LinguisticVariable& entrada2, const LinguisticVariable& salida);
 
-    /**
-     * Etapa 3: para cada conjunto de la variable de salida, calcula el
-     * máximo alpha entre las reglas que lo concluyen.
-     * Retorna un valor por conjunto, en el mismo orden de la variable de salida.
-     */
-    std::vector<double> agregar() const;
+        /**
+        * Etapa 3: para cada conjunto de la variable de salida, calcula el
+        * máximo alpha entre las reglas que lo concluyen.
+        * Retorna un valor por conjunto, en el mismo orden de la variable de salida.
+        */
+        std::vector<double> agregar() const;
 
-    /**
-     * Etapa 4: calcula el centroide de la salida agregada.
-     * Recibe los alphas que devolvió agregar().
-     */
-    double defuzzificar(const std::vector<double>& alphas) const;
+        /**
+        * Etapa 4: calcula el centroide de la salida agregada.
+        * Recibe los alphas que devolvió agregar().
+        */
+        double defuzzificar(const std::vector<double>& alphas) const;
 
-    /**
-     * Ejecuta las 4 etapas del proceso Mamdani para un par de valores
-     * de entrada y retorna el valor de la salida.
-     */
-    double inferir(double valor1, double valor2);
+        /**
+        * Ejecuta las 4 etapas del proceso Mamdani para un par de valores
+        * de entrada y retorna el valor de la salida.
+        */
+        double inferir(double valor1, double valor2);
 };
 
 #endif
