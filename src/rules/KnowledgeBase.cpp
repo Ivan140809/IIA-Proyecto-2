@@ -194,11 +194,11 @@ void KnowledgeBase::mostrarReglas() const {
 // muestra el alpha de cada regla usando los grados de la ultima fuzzificacion
 void KnowledgeBase::mostrarActivaciones() const {
 
-    std::cout << "\n" << " Activacion de reglas\n" << "\n" << "   " << std::left << std::setw(6)  << "ID" << std::setw(74) << "Regla" << std::setw(25) << "alpha (Activacion)" << "\n";
+    std::cout << "\n" << " Activacion de reglas\n" << "\n" << "   " << std::left << std::setw(6)  << "ID" << std::setw(80) << "Regla" << std::setw(10) << "alpha   (Activacion)" << "\n";
 
     for (const auto& r : reglas) {
         std::string idStr = "R" + std::to_string(r.getId());
         double alpha = r.calcularActivacion(); // min de los dos antecedentes
-        std::cout << "   " << std::left  << std::setw(6)  << idStr << std::setw(74) << r.toString() << std::setw(25) << formatear(alpha, 4) << (alpha > 0.0 ? " *" : "") << "\n"; // * si la regla se activo
+        std::cout << "   " << std::left  << std::setw(6)  << idStr << std::setw(80) << r.toString() << std::setw(10) << formatear(alpha, 4) << (alpha > 0.0 ? "   *" : "") << "\n"; // * si la regla se activo
     }
 }
