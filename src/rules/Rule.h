@@ -5,32 +5,37 @@
 #include <algorithm>
 #include <ostream>
 #include <string>
+#include <vector>
 
 /**
- * Modela una regla difusa del tipo Mamdani con dos variables de entrada
+ * Modela una regla difusa del tipo Mamdani con variables de entrada (2, 3 o N)
  * y una variable de salida:
- * SI <Ant1> Y <Ant2> ENTONCES <Consec>
+ * SI <Ant1> Y <Ant2> [Y <Ant3>] ENTONCES <Consec>
  */
 class Rule {
-    // atributos al crear una regla como se escribiria con dos antecedentes y consecuentes
     int id; // numero de la regla R1, R2...
-    Proposition antecedente1; // primera condicion ej: Descuento es Medio
-    Proposition antecedente2; // segunda condicion ej: Necesidad es Alta
+    std::vector<Proposition> antecedentes; // condiciones ej: Descuento es Medio, etc.
     Proposition consecuente; // conclusion ej: Compra es Comprar
 
 public:
-    // constructor
+    // constructores
+    Rule(int id, const std::vector<Proposition>& antecedentes, const Proposition& consecuente);
     Rule(int id, const Proposition& antecedente1, const Proposition& antecedente2, const Proposition& consecuente);
+    Rule(int id, const Proposition& antecedente1, const Proposition& antecedente2, const Proposition& antecedente3, const Proposition& consecuente);
+
     // getters
     int getId() const;
+    const std::vector<Proposition>& getAntecedentes() const;
+    const Proposition& getAntecedente(std::size_t index) const;
     const Proposition& getAntecedente1() const;
     const Proposition& getAntecedente2() const;
+    const Proposition& getAntecedente3() const;
     const Proposition& getConsecuente() const;
 
     /**
      * Calcula la fuerza de disparo (grado de activación alpha)
-     * usando la T-norma estándar del Mínimo:
-     * alpha = min(mu_ant1, mu_ant2) usando el minimo de ambas
+     * usando la T-norma estándar del Mínimo para todos los antecedentes:
+     * alpha = min(mu_ant1, mu_ant2, [mu_ant3, ...])
      */
     double calcularActivacion() const;
 
