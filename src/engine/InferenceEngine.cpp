@@ -32,8 +32,7 @@ vector<double> InferenceEngine::agregar() const {
     }
 
     // mostrar el alpha final de cada conjunto de salida
-    cout << "\n   AGREGACION \n";
-    cout << " Agregacion ";
+    cout << "\nAGREGACION \n";
 
     for (size_t j = 0; j < conjuntos.size(); j++) {
         cout << "   " << salida.getNombre() << " ES " << conjuntos[j]->getNombre()
@@ -73,23 +72,23 @@ double InferenceEngine::defuzzificar(const vector<double>& alphas) const {
     }
 
 
-    cout << "\n   DEFUZZIFICACION\n";
+    cout << "\nDEFUZZIFICACION\n";
     if (denominador == 0.0) {
         // Ninguna regla se activó: no hay figura que promediar (evita dividir por 0).
         // Se retorna el centro del universo como valor por defecto.
-        cout << "   Ninguna regla se activo; se retorna el centro del universo.\n";
+        cout << "Ninguna regla se activo.\n";
         return (inicio + fin) / 2.0;
     }
 
     double resultado = numerador / denominador;
-    cout << "   Centroide = " << resultado << " " << salida.getUnidad() << "\n";
+    cout << "Centroide = " << resultado << " " << salida.getUnidad() << "\n";
     return resultado;
 }
 
 double InferenceEngine::inferir(double valor1, double valor2) {
     // Etapa 1: Fuzzificación. Cada conjunto de cada variable de entrada
     // guarda internamente su grado de pertenencia para el valor dado.
-    cout << "\n   FUZZIFICACION \n";
+    cout << "\nFUZZIFICACION \n";
     entrada1.fuzzificar(valor1);
     entrada2.fuzzificar(valor2);
     entrada1.mostrarFuzzificacion();
@@ -97,7 +96,7 @@ double InferenceEngine::inferir(double valor1, double valor2) {
 
     // Etapa 2: Evaluación de reglas. Las proposiciones de las reglas leen los
     // grados guardados en el paso anterior y calculan alpha = min(mu1, mu2).
-    cout << "\n   EVALUACION DE REGLAS \n";
+    cout << "\nEVALUACION DE REGLAS \n";
     base.mostrarActivaciones();
 
     // Etapas 3 y 4 
