@@ -14,14 +14,12 @@
 class InferenceEngine {
     private:
         const KnowledgeBase& base; // reglas que se evaluan
-        LinguisticVariable& entrada1; // sin const porque se fuzzifica
-        LinguisticVariable& entrada2; // sin const porque se fuzzifica
+        std::vector<LinguisticVariable*> entradas; // const porque se fuzzifica
         const LinguisticVariable& salida; // solo se lee para agregar y defuzzificar
 
     public:
         /** Recibe la base y las 3 variables, entrada1 y entrada2 deben ir en el mismo orden que los valores de inferir() */
-        InferenceEngine(const KnowledgeBase& base, LinguisticVariable& entrada1,
-                    LinguisticVariable& entrada2, const LinguisticVariable& salida);
+        InferenceEngine(const KnowledgeBase& base, const std::vector<LinguisticVariable*>& entradas, const LinguisticVariable& salida);
 
         /**
         * Etapa 3: para cada conjunto de la variable de salida, calcula el
@@ -40,7 +38,7 @@ class InferenceEngine {
         * Ejecuta las 4 etapas del proceso Mamdani para un par de valores
         * de entrada y retorna el valor de la salida.
         */
-        double inferir(double valor1, double valor2);
+        double inferir(const std::vector<double>& valores);
 };
 
 #endif

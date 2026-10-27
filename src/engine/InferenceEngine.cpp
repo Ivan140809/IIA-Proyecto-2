@@ -5,8 +5,8 @@
 using namespace std;
 
 // Constructor: guarda las referencias a la base y a las variables (no copia nada)
-InferenceEngine::InferenceEngine(const KnowledgeBase& base, LinguisticVariable& entrada1, LinguisticVariable& entrada2, const LinguisticVariable& salida) : 
-    base(base), entrada1(entrada1), entrada2(entrada2), salida(salida) {}
+InferenceEngine::InferenceEngine(const KnowledgeBase& base, const vector<LinguisticVariable*>& entradas, const LinguisticVariable& salida) :
+    base(base), entradas(entradas), salida(salida) {}
 
 // Etapa 3: Agregacion
 vector<double> InferenceEngine::agregar() const {
@@ -90,14 +90,17 @@ double InferenceEngine::defuzzificar(const vector<double>& alphas) const {
 }
 
 // Ejecuta las 4 etapas en orden y retorna el valor nitido de la salida
-double InferenceEngine::inferir(double valor1, double valor2) {
+double InferenceEngine::inferir(const vector<double>& valores) {
     // Etapa 1: Fuzzificación. Cada conjunto de cada variable de entrada
     // guarda internamente su grado de pertenencia para el valor dado.
-    cout << "\nFUZZIFICACION \n";
-    entrada1.fuzzificar(valor1);
-    entrada2.fuzzificar(valor2);
-    entrada1.mostrarFuzzificacion();
-    entrada2.mostrarFuzzificacion();
+    if (valores.size() != entradas.size()) {
+        throw invalid_argument("se esperaban " + to_string(entradas.size()) + " valores de entrada y llegaron " + to_string(valores.size()));
+    }
+    cout << "\n fuzzificacion \n";
+    for (size_t i = 0; i < entradas.size(); i++) {
+        entradas[i]->fuzzificar(valores[i]);
+        entradas[i]->mostrarFuzzificacion();
+    }
 
     // Etapa 2: Evaluación de reglas. Las proposiciones de las reglas leen los
     // grados guardados en el paso anterior y calculan alpha = min(mu1, mu2).
