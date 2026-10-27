@@ -18,10 +18,10 @@
  class DiffuseSet {
 
 public:
-/** etiqueta linguistica del conjunto*/
+/** etiqueta linguistica del conjunto, explicit impide que se convierta un string en un conjunto difuso*/
     explicit DiffuseSet(const std::string& nombre);
 
-/** Destructor para los conjuntos con un puntero dinamico */
+/** Destructor para los conjuntos con un puntero dinamico,virtual se usa para el polimorfismo en la herencia */
     virtual ~DiffuseSet() = default;
 
 
@@ -29,19 +29,20 @@ public:
  * y lo transforma en el grado de pertenencia del conjunto
  */
 
- /** virtual significa el polimorfismo en ejecucion */
+ /** virtual significa el polimorfismo en ejecucion, cada clase hija debe implementarla por eso DiffuseSet es una clase abstracta */
 virtual double calcularPertenencia(double x) const = 0;
 
+//
 /** nombre de la forma triangular o trapezoidal*/
 virtual std::string getTipo() const =0;
 
-/** los puntos que definen la forma como texto */
+/** los puntos que definen la forma como texto (es decir los que llegan de entrada y definen la forma del conjunto) */
 virtual std::string getPuntosTexto() const = 0;
 
-/** Limite inferior izquierdo */
+/** Limite inferior izquierdo, indica donde empieza la figura */
 virtual double getLimiteInferior() const =0;
 
-/** Limite superior derecho */
+/** Limite superior derecho, indica donde termina la figura */
 virtual double getLimiteSuperior() const =0;
 
 
@@ -49,6 +50,7 @@ virtual double getLimiteSuperior() const =0;
  * le entra el valor real de variable y le sale el grado de pertenencia calculado
  */
 double fuzzificar(double x);
+// restablecer grado de pertenencia a 0
 void reiniciarGrado();
 
 /** getters */
@@ -56,7 +58,7 @@ const std::string& getNombre() const;
 double getGradoPertenencia() const;
 
 protected:
-    /** Convierte una lista de puntos en el texto */
+    /** Convierte una lista de puntos en el texto, funcion estatica que no necesariamente acepta un objeto */
     static std::string formatearPuntos(std::initializer_list<double> puntos);
 
 

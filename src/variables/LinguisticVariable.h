@@ -14,7 +14,7 @@
  * esto queda definido por un nombre un rango de porcentaje que representa el descuento y un conjunto de terminos que se modelan 
  * cada uno con una funcion de pertenencia
  * 
- * Se encarga de fizzificar, agrupar los valores y validarlos
+ * Se encarga de fuzzificar, agrupar los valores y validarlos
  */
 
  class LinguisticVariable {
@@ -49,6 +49,8 @@
      * */
     void mostrarFuzzificacion() const;
     
+
+    //getters de los valores
     const std::string& getNombre() const {return nombre;}
     VariableType getTipo() const {return tipo;}
     double getMinimo() const {return minimo;}

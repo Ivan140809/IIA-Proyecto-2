@@ -15,9 +15,9 @@
     SALIDA
  };
 
-// convierte el tipo a texto para mostrarlo
+// convierte el tipo a texto para mostrarlo solo en entrada y salida
 inline std::string tipoATexto(VariableType tipo) {
-    return (tipo==VariableType::ENTRADA) ? "ENTRADA" : "SALIDA";
+    return (tipo==VariableType::ENTRADA) ? "Entrada" : "Salida"; 
 }
 
 /**

@@ -12,12 +12,14 @@ public:
     /** excepcion si no se cumple la traduccion especifcamente en el triangulo (si es en el piso o invalido) */
     TriangularSet(const std::string& nombre, double a, double b, double c);
 
+    // usa override para indicar que la funcion esta modificando directamente los metodos del metodo difuso principal
     double calcularPertenencia(double x) const override;
     std::string getTipo() const override;
     std::string getPuntosTexto() const override;
     double getLimiteInferior() const override;
     double getLimiteSuperior() const override;
 
+    //getters de a,b,c
     double getA() const {
         return a;
     }

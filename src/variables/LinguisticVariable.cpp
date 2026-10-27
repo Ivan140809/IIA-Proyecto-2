@@ -19,11 +19,11 @@ LinguisticVariable::LinguisticVariable(const std::string& nombre, VariableType t
 }
 
 void LinguisticVariable::agregarConjunto(std::unique_ptr<DiffuseSet> conjunto) {
-    // no se permiten dos conjuntos con la misma etiqueta en una variable
+    // no se permiten dos conjuntos con la misma etiqueta en una variable por ejemplo el conjunto bajo 
     if (getConjunto(conjunto->getNombre()) != nullptr) {
         throw std::invalid_argument("la variable '" + nombre + "' ya tiene un conjunto llamado '" + conjunto->getNombre() + "'");
     }
-    // el soporte del conjunto debe quedar dentro del universo 
+    // el soporte del conjunto debe quedar dentro del universo de valores definidos 
     if (conjunto->getLimiteInferior() < minimo || conjunto->getLimiteSuperior() > maximo) {
         throw std::invalid_argument("el conjunto '" + conjunto->getNombre() + "' se sale del universo [" + formatear(minimo) + ", " + formatear(maximo) + "] de la variable '" + nombre + "'");
     }
@@ -34,7 +34,7 @@ void LinguisticVariable::agregarConjunto(std::unique_ptr<DiffuseSet> conjunto) {
 DiffuseSet* LinguisticVariable::getConjunto(const std::string& nombreConjunto) const {
     for (const auto& c:conjuntos) {
         if (iguales(c->getNombre(), nombreConjunto)) {
-            return c.get(); 
+            return c.get(); // devuelve el puntero no el valor
         }
     }
     return nullptr;
@@ -44,16 +44,16 @@ void LinguisticVariable::fuzzificar(double valor) {
     // si el valor se sale del universo se satura al limite mas cercano [minimo, maximo]
     double x = std::max(minimo, std::min(maximo, valor));
     if (x != valor) {
-        std::cout << "  [Aviso] " << formatear(valor) << " está fuera de [" << formatear(minimo) << ", " << formatear(maximo) << "]; se usará " << formatear(x) << "\n";
+        std::cout << "el valor " << formatear(valor) << " está fuera de [" << formatear(minimo) << ", " << formatear(maximo) << "], se usara " << formatear(x) << "\n";
     }
     valorNitido = x;
     // cada conjunto calcula y guarda internamente su propio grado de pertenencia
     for (auto& c : conjuntos) {
-        c->fuzzificar(x);
+        c->fuzzificar(x); // se llama al fuzzificar del conjunto
     }
 }
 
-void LinguisticVariable::reiniciar() {
+void LinguisticVariable::reiniciar() { // se vuelve a poner NaN y los grados en 0
     valorNitido = std::numeric_limits<double>::quiet_NaN();
     for (auto& c : conjuntos) {
         c->reiniciarGrado();
@@ -61,29 +61,23 @@ void LinguisticVariable::reiniciar() {
 }
 
 void LinguisticVariable::mostrar() const {
-    const std::string linea(66, '=');
     // datos generales de la variable
-    std::cout << linea << "\n"
-              << " VARIABLE LINGÜÍSTICA: " << nombre << "  (" << tipoATexto(tipo) << ")\n"
-              << "   Universo de discurso : [" << formatear(minimo) << " , " << formatear(maximo) << "] " << unidad << "\n"
-              << "   Número de conjuntos  : " << conjuntos.size() << "\n"
-              << std::string(66, '-') << "\n"
-              << "   " << std::left << std::setw(12) << "Conjunto" << " " << std::setw(12) << "Forma" << " Puntos\n";
+    std::cout << "\n" << " Variable linguistica: " << nombre << "  (" << tipoATexto(tipo) << ")\n" << " Universo : [" << formatear(minimo) << " , " << formatear(maximo) << "] " << unidad << "\n" << "Numero de conjuntos  : " << conjuntos.size() << "\n" << "\n" << "   " << std::left << std::setw(12) << "Conjunto" << " " << std::setw(12) << "Forma" << " Puntos\n";
     // una linea por conjunto, usando el operator<< de DiffuseSet
     for (const auto& c : conjuntos) {
         std::cout << "   " << *c << "\n";
     }
-    std::cout << linea << "\n";
+    std::cout << "\n";
 }
 
 void LinguisticVariable::mostrarFuzzificacion() const {
     if (std::isnan(valorNitido)) {
-        std::cout << "  La variable '" << nombre << "' aún no ha sido fuzzificada.\n";
+        std::cout << "  La variable '" << nombre << "' aun no ha sido fuzzificada.\n";
         return;
     }
-    std::cout << "\n FUZZIFICACIÓN de " << nombre << " con x = " << formatear(valorNitido) << " " << unidad << "\n";
+    std::cout << "\n Fuzzificacion de " << nombre << " con x = " << formatear(valorNitido) << " " << unidad << "\n";
     // grado de pertenencia que quedo registrado en cada conjunto
     for (const auto& c : conjuntos) {
-        std::cout << "   μ_" << std::left << std::setw(12) << c->getNombre() << " = " << formatear(c->getGradoPertenencia(), 4) << "\n";
+        std::cout << "μ" << std::left << std::setw(12) << c->getNombre() << " = " << formatear(c->getGradoPertenencia(), 4) << "\n";
     }
 }
