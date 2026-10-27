@@ -4,9 +4,11 @@
 
 using namespace std;
 
+// Constructor: guarda las referencias a la base y a las variables (no copia nada)
 InferenceEngine::InferenceEngine(const KnowledgeBase& base, LinguisticVariable& entrada1, LinguisticVariable& entrada2, const LinguisticVariable& salida) : 
     base(base), entrada1(entrada1), entrada2(entrada2), salida(salida) {}
 
+// Etapa 3: Agregacion
 vector<double> InferenceEngine::agregar() const {
     // Conjuntos de la variable de salida (NoComprar, Pensarlo, Comprar)
     const auto& conjuntos = salida.getConjuntos();
@@ -41,7 +43,9 @@ vector<double> InferenceEngine::agregar() const {
     return alphas;
 }
 
+// Etapa 4: Defuzzificacion por el metodo del centroide
 double InferenceEngine::defuzzificar(const vector<double>& alphas) const {
+    // Conjuntos de la variable de salida
     const auto& conjuntos = salida.getConjuntos();
 
     // Universo de la salida y tamaño del paso de muestreo
@@ -72,7 +76,7 @@ double InferenceEngine::defuzzificar(const vector<double>& alphas) const {
     }
 
 
-    cout << "\nDEFUZZIFICACION\n";
+    cout << "\n defuzzificacion \n";
     if (denominador == 0.0) {
         // Ninguna regla se activó: no hay figura que promediar (evita dividir por 0).
         // Se retorna el centro del universo como valor por defecto.
@@ -85,6 +89,7 @@ double InferenceEngine::defuzzificar(const vector<double>& alphas) const {
     return resultado;
 }
 
+// Ejecuta las 4 etapas en orden y retorna el valor nitido de la salida
 double InferenceEngine::inferir(double valor1, double valor2) {
     // Etapa 1: Fuzzificación. Cada conjunto de cada variable de entrada
     // guarda internamente su grado de pertenencia para el valor dado.
@@ -99,7 +104,7 @@ double InferenceEngine::inferir(double valor1, double valor2) {
     cout << "\nEVALUACION DE REGLAS \n";
     base.mostrarActivaciones();
 
-    // Etapas 3 y 4 
+    // Etapas 3 y 4: agregacion y defuzzificacion (cada una imprime su traza)
     vector<double> alphas = agregar();
     return defuzzificar(alphas);
 }

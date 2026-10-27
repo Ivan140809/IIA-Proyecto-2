@@ -16,8 +16,9 @@
  * - Almacenar y visualizar las reglas difusas en formato texto.
  */
 class KnowledgeBase {
+    std::vector<Rule> reglas; // todas las reglas cargadas del archivo
 
-    std::vector<Rule> reglas;
+    // punteros a las 3 variables que usa el sistema, se llenan con la primera regla
     const LinguisticVariable* varEntrada1;
     const LinguisticVariable* varEntrada2;
     const LinguisticVariable* varSalida;
@@ -26,9 +27,15 @@ class KnowledgeBase {
     static std::string quitarComentarios(const std::string& linea);
     static std::vector<std::string> tokenizar(const std::string& linea);
 
+    /** Busca una variable por nombre sin importar mayusculas, retorna nullptr si no existe */
     const LinguisticVariable* buscarVariable(const std::string& nombre, const std::vector<LinguisticVariable>& variables) const;
+
+    /** Valida una parte "Variable ES Conjunto" de la regla y crea la proposicion conectada al conjunto real
+     * salta una excepcion si la variable no existe, no es del tipo esperado o el conjunto no es de esa variable
+     */
     Proposition validarYCrearProposicion(const std::string& nombreVar, const std::string& nombreConjunto, VariableType tipoEsperado, const std::vector<LinguisticVariable>& variables, int numLinea);
 public:
+    // constructores, cargar, agregar, limpiar y mostrar
     KnowledgeBase();
     KnowledgeBase(const std::string& rutaArchivo, const std::vector<LinguisticVariable>& variables);
 
@@ -53,10 +60,10 @@ public:
      */
     void mostrarActivaciones() const;
 
+    // getters
     const std::vector<Rule>& getReglas() const { return reglas; }
     std::size_t getCantidadReglas() const { return reglas.size(); }
     bool estaVacia() const { return reglas.empty(); }
-
     const LinguisticVariable* getVariableEntrada1() const { return varEntrada1; }
     const LinguisticVariable* getVariableEntrada2() const { return varEntrada2; }
     const LinguisticVariable* getVariableSalida() const { return varSalida; }

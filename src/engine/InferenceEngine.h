@@ -5,14 +5,21 @@
 #include "../variables/LinguisticVariable.h"
 #include <vector>
 
+/**
+ * Motor de inferencia difusa tipo Mamdani con dos variables de entrada y una de salida.
+ * Ejecuta las 4 etapas: fuzzificacion, evaluacion de reglas, agregacion y defuzzificacion.
+ *
+ * Trabaja con referencias a la base de conocimiento y a las variables, no hace copias.
+ */
 class InferenceEngine {
     private:
-        const KnowledgeBase& base;
-        LinguisticVariable& entrada1;
-        LinguisticVariable& entrada2;
-        const LinguisticVariable& salida;
+        const KnowledgeBase& base; // reglas que se evaluan
+        LinguisticVariable& entrada1; // sin const porque se fuzzifica
+        LinguisticVariable& entrada2; // sin const porque se fuzzifica
+        const LinguisticVariable& salida; // solo se lee para agregar y defuzzificar
 
     public:
+        /** Recibe la base y las 3 variables, entrada1 y entrada2 deben ir en el mismo orden que los valores de inferir() */
         InferenceEngine(const KnowledgeBase& base, LinguisticVariable& entrada1,
                     LinguisticVariable& entrada2, const LinguisticVariable& salida);
 

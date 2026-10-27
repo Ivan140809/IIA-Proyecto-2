@@ -29,9 +29,9 @@ std::vector<LinguisticVariable> VariableCharger::cargar(const std::string& ruta)
         }
         try {
             std::string palabraClave = aMayus(campos[0]);
-            if (palabraClave == "Variable") {
+            if (palabraClave == "VARIABLE") {
                 variables.push_back(crearVariable(campos)); //si es variable la crea y mete al final del vector
-            } else if (palabraClave == "Conjunto") { // si es conjunto busca una variable asociada si no da error 
+            } else if (palabraClave == "CONJUNTO") { // si es conjunto busca una variable asociada si no da error 
                 if (variables.empty()) {
                     throw std::invalid_argument("Conjunto declarado antes de cualquier Variable");
                 }
