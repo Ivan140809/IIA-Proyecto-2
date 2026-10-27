@@ -5,17 +5,31 @@
 # Variables de Entrada:
 #   - Distancia: Cerca, Media, Lejos
 #   - Velocidad: Lento, Normal, Rapido
+#   - Via: NoAsfaltado Asfaltado
+
 # Variable de Salida:
 #   - FuerzaFrenado: MuySuave, Suave, Medio, Fuerte, MuyFuerte
 
-SI Distancia ES Cerca   Y Velocidad ES Lento  ENTONCES FuerzaFrenado ES Medio
-SI Distancia ES Cerca   Y Velocidad ES Normal  ENTONCES FuerzaFrenado ES Fuerte
-SI Distancia ES Cerca   Y Velocidad ES Rapido  ENTONCES FuerzaFrenado ES MuyFuerte
+SI Distancia ES Cerca   Y Velocidad ES Lento  Y Via ES NoAsfaltado ENTONCES FuerzaFrenado ES Fuerte
+SI Distancia ES Cerca   Y Velocidad ES Normal  Y Via ES NoAsfaltado ENTONCES FuerzaFrenado ES MuyFuerte
+SI Distancia ES Cerca   Y Velocidad ES Rapido  Y Via ES NoAsfaltado ENTONCES FuerzaFrenado ES MuyFuerte
 
-SI Distancia ES Media   Y Velocidad ES Lento  ENTONCES FuerzaFrenado ES Suave
-SI Distancia ES Media   Y Velocidad ES Normal  ENTONCES FuerzaFrenado ES Medio
-SI Distancia ES Media   Y Velocidad ES Rapido  ENTONCES FuerzaFrenado ES Fuerte
+SI Distancia ES Media   Y Velocidad ES Lento  Y Via ES NoAsfaltado ENTONCES FuerzaFrenado ES Medio
+SI Distancia ES Media   Y Velocidad ES Normal  Y Via ES NoAsfaltado ENTONCES FuerzaFrenado ES Fuerte
+SI Distancia ES Media   Y Velocidad ES Rapido  Y Via ES NoAsfaltado ENTONCES FuerzaFrenado ES MuyFuerte
 
-SI Distancia ES Lejos   Y Velocidad ES Lento  ENTONCES FuerzaFrenado ES MuySuave
-SI Distancia ES Lejos   Y Velocidad ES Normal  ENTONCES FuerzaFrenado ES Suave
-SI Distancia ES Lejos   Y Velocidad ES Rapido  ENTONCES FuerzaFrenado ES Medio
+SI Distancia ES Lejos   Y Velocidad ES Lento  Y Via ES NoAsfaltado ENTONCES FuerzaFrenado ES Suave
+SI Distancia ES Lejos   Y Velocidad ES Normal  Y Via ES NoAsfaltado ENTONCES FuerzaFrenado ES Medio
+SI Distancia ES Lejos   Y Velocidad ES Rapido  Y Via ES NoAsfaltado ENTONCES FuerzaFrenado ES Fuerte
+
+SI Distancia ES Cerca   Y Velocidad ES Lento  Y Via ES Asfaltado ENTONCES FuerzaFrenado ES Medio
+SI Distancia ES Cerca   Y Velocidad ES Normal  Y Via ES Asfaltado ENTONCES FuerzaFrenado ES Fuerte
+SI Distancia ES Cerca   Y Velocidad ES Rapido  Y Via ES Asfaltado ENTONCES FuerzaFrenado ES MuyFuerte
+
+SI Distancia ES Media   Y Velocidad ES Lento  Y Via ES Asfaltado ENTONCES FuerzaFrenado ES Suave
+SI Distancia ES Media   Y Velocidad ES Normal  Y Via ES Asfaltado ENTONCES FuerzaFrenado ES Medio
+SI Distancia ES Media   Y Velocidad ES Rapido  Y Via ES Asfaltado ENTONCES FuerzaFrenado ES Fuerte
+
+SI Distancia ES Lejos   Y Velocidad ES Lento  Y Via ES Asfaltado ENTONCES FuerzaFrenado ES MuySuave
+SI Distancia ES Lejos   Y Velocidad ES Normal  Y Via ES Asfaltado ENTONCES FuerzaFrenado ES Suave
+SI Distancia ES Lejos   Y Velocidad ES Rapido  Y Via ES Asfaltado ENTONCES FuerzaFrenado ES Medio
