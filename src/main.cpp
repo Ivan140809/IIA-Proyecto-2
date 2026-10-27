@@ -18,7 +18,6 @@ static void probar(const std::string& titulo, const std::string& archVar, const 
     std::cout << "Fase 2: Base de reglas\n";
     KnowledgeBase base(archReglas, variables); // no modificar variables despues de esto
     base.mostrarReglas();
-    base.mostrarActivaciones();
 
     std::cout << "Fase 3: Motor de inferencia\n";
     // separa las entradas (en el orden del archivo) de la variable de salida
