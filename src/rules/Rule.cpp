@@ -24,7 +24,7 @@ double Rule::calcularActivacion() const {
 }
 
 std::string Rule::toString() const {
-    return "Si " + antecedente1.toString() + " y" + antecedente2.toString() + " Entonces " + consecuente.toString();
+    return "Si " + antecedente1.toString() + " y " + antecedente2.toString() + " Entonces " + consecuente.toString();
 }
 
 std::ostream& operator<<(std::ostream& os, const Rule& regla) {

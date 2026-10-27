@@ -72,7 +72,7 @@ double InferenceEngine::defuzzificar(const vector<double>& alphas) const {
 }
 
 double InferenceEngine::inferir(double valor1, double valor2) {
-    cout << "\ Fuzzificacion \n";
+    cout << "\n Fuzzificacion \n";
     entrada1.fuzzificar(valor1);
     entrada2.fuzzificar(valor2);
     entrada1.mostrarFuzzificacion();
