@@ -1,1 +1,21 @@
-a
+# Base de Conocimiento de Reglas Difusas
+# Sistema de Inferencia Difusa para Decisión de Compra
+# Formato: SI <Var1> ES <Conjunto1> Y <Var2> ES <Conjunto2> ENTONCES <VarSalida> ES <ConjuntoSalida>
+#
+# Variables de Entrada:
+#   - Distancia: Cerca, Media, Lejos
+#   - Velocidad: Lento, Normal, Rapido
+# Variable de Salida:
+#   - FuerzaFrenado: MuySuave, Suave, Medio, Fuerte, MuyFuerte
+
+SI Distancia ES Cerca   Y Velocidad ES Lento  ENTONCES FuerzaFrenado ES Medio
+SI Distancia ES Cerca   Y Velocidad ES Normal  ENTONCES FuerzaFrenado ES Fuerte
+SI Distancia ES Cerca   Y Velocidad ES Rapido  ENTONCES FuerzaFrenado ES MuyFuerte
+
+SI Distancia ES Media   Y Velocidad ES Lento  ENTONCES FuerzaFrenado ES Suave
+SI Distancia ES Media   Y Velocidad ES Normal  ENTONCES FuerzaFrenado ES Medio
+SI Distancia ES Media   Y Velocidad ES Rapido  ENTONCES FuerzaFrenado ES Fuerte
+
+SI Distancia ES Lejos   Y Velocidad ES Lento  ENTONCES FuerzaFrenado ES MuySuave
+SI Distancia ES Lejos   Y Velocidad ES Normal  ENTONCES FuerzaFrenado ES Suave
+SI Distancia ES Lejos   Y Velocidad ES Rapido  ENTONCES FuerzaFrenado ES Medio

@@ -16,6 +16,7 @@ static void probar(const std::string& titulo, const std::string& archVar, const 
     std::cout << "Fase 2: Base de reglas\n";
     KnowledgeBase base(archReglas, variables); // no modificar variables despues de esto
     base.mostrarReglas();
+    base.mostrarActivaciones();
 
     std::cout << "Fase 3: Motor de inferencia\n";
     InferenceEngine motor(base, variables[0], variables[1], variables[2]);
@@ -31,9 +32,7 @@ static void probar(const std::string& titulo, const std::string& archVar, const 
 int main(){
     // mismos casos de entrada sobre configuraciones con distinta cantidad de conjuntos
     std::vector<std::pair<double, double>> casos = {{5, 1}, {25, 5}, {45, 9}, {15, 3}, {45, 1}};
-    probar("3 conjuntos por variable", "data/variables.txt", "data/rules.txt", casos);
-    probar("5 conjuntos por variable", "data/variables_5conjuntos.txt", "data/rules_5conjuntos.txt", casos);
-    probar("Mixto 3x5 -> 4", "data/variables_mixto.txt", "data/rules_mixto.txt", casos);
+    probar("3 conjuntos por variable", "data/variables.txt", "data/rules.txt", casos); 
 
     return 0;
 }
