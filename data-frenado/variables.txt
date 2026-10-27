@@ -12,8 +12,8 @@ CONJUNTO  Rapido       TRAPEZOIDAL  30   70  100  100
 
 # Entrada 3: Calidad de la via (%) 
 VARIABLE  Via  ENTRADA  0  100  %
-CONJUNTO  NoAsfaltado      TRIANGULAR   0   30   60
-CONJUNTO  Asfaltado      TRIANGULAR   50 75 100
+CONJUNTO  NoAsfaltado      TRAPEZOIDAL   0  0   30   60
+CONJUNTO  Asfaltado      TRAPEZOIDAL   50 75 100 100
 
 # Salida: Fuerza de frenado del vehiculo (%)
 VARIABLE  FuerzaFrenado     SALIDA   0  100  %
