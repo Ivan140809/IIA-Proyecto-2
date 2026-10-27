@@ -8,7 +8,7 @@
 
 /**
  * Representa la Base de Conocimiento de un sistema difuso para gestionar
- * inferencias con dos variables de entrada y una de salida.
+ * inferencias con variables de entrada (2, 3 o N) y una de salida.
  *
  * Se encarga de:
  * - Cargar reglas lingüísticas desde un archivo de texto.
@@ -18,9 +18,11 @@
 class KnowledgeBase {
     std::vector<Rule> reglas; // todas las reglas cargadas del archivo
 
-    // punteros a las 3 variables que usa el sistema, se llenan con la primera regla
+    // punteros a las variables que usa el sistema
+    std::vector<const LinguisticVariable*> varsEntrada;
     const LinguisticVariable* varEntrada1;
     const LinguisticVariable* varEntrada2;
+    const LinguisticVariable* varEntrada3;
     const LinguisticVariable* varSalida;
 
     /** Métodos auxiliares de parseo y validación */
@@ -34,6 +36,7 @@ class KnowledgeBase {
      * salta una excepcion si la variable no existe, no es del tipo esperado o el conjunto no es de esa variable
      */
     Proposition validarYCrearProposicion(const std::string& nombreVar, const std::string& nombreConjunto, VariableType tipoEsperado, const std::vector<LinguisticVariable>& variables, int numLinea);
+
 public:
     // constructores, cargar, agregar, limpiar y mostrar
     KnowledgeBase();
@@ -64,8 +67,10 @@ public:
     const std::vector<Rule>& getReglas() const { return reglas; }
     std::size_t getCantidadReglas() const { return reglas.size(); }
     bool estaVacia() const { return reglas.empty(); }
+    const std::vector<const LinguisticVariable*>& getVariablesEntrada() const { return varsEntrada; }
     const LinguisticVariable* getVariableEntrada1() const { return varEntrada1; }
     const LinguisticVariable* getVariableEntrada2() const { return varEntrada2; }
+    const LinguisticVariable* getVariableEntrada3() const { return varEntrada3; }
     const LinguisticVariable* getVariableSalida() const { return varSalida; }
 
 };

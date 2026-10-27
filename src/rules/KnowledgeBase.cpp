@@ -8,18 +8,20 @@
 #include <stdexcept>
 
 // constructor vacio
-KnowledgeBase::KnowledgeBase(): varEntrada1(nullptr), varEntrada2(nullptr), varSalida(nullptr) {}
+KnowledgeBase::KnowledgeBase(): varEntrada1(nullptr), varEntrada2(nullptr), varEntrada3(nullptr), varSalida(nullptr) {}
 
 // constructor que carga el archivo 
-KnowledgeBase::KnowledgeBase(const std::string& rutaArchivo, const std::vector<LinguisticVariable>& variables): varEntrada1(nullptr), varEntrada2(nullptr), varSalida(nullptr) {
+KnowledgeBase::KnowledgeBase(const std::string& rutaArchivo, const std::vector<LinguisticVariable>& variables): varEntrada1(nullptr), varEntrada2(nullptr), varEntrada3(nullptr), varSalida(nullptr) {
     cargarDesdeArchivo(rutaArchivo, variables);
 }
 
 // vacia el vector y reinicia los punteros
 void KnowledgeBase::limpiar() {
     reglas.clear();
+    varsEntrada.clear();
     varEntrada1 = nullptr;
     varEntrada2 = nullptr;
+    varEntrada3 = nullptr;
     varSalida = nullptr;
 }
 
@@ -109,44 +111,99 @@ void KnowledgeBase::cargarDesdeArchivo(const std::string& rutaArchivo, const std
         }
 
         // Formato esperado:
-        // SI <Var1> ES <Conjunto1> Y <Var2> ES <Conjunto2> ENTONCES <VarSalida> ES <ConjuntoSalida>
-        if (tokens.size() != 12) {
-            throw std::runtime_error("Error en " + rutaArchivo + ", línea " + std::to_string(numLinea) + ": Formato de regla inválido. Se esperaba: " "SI <Var1> ES <Conjunto1> Y <Var2> ES <Conjunto2> ENTONCES <VarSalida> ES <ConjuntoSalida>");
+        // SI <Var1> ES <Conj1> Y <Var2> ES <Conj2> [Y <Var3> ES <Conj3>] ENTONCES <VarSalida> ES <ConjSalida>
+        if (!iguales(tokens[0], "SI")) {
+            throw std::runtime_error("Error en " + rutaArchivo + ", línea " + std::to_string(numLinea) + ": La regla debe comenzar con 'SI'.");
         }
 
-        // palabras clave en las posiciones 0, 2, 4, 6, 8 y 10 sin importar mayusculas
-        if (!iguales(tokens[0], "SI") || !iguales(tokens[2], "ES") || !iguales(tokens[4], "Y") || !iguales(tokens[6], "ES") ||!iguales(tokens[8], "ENTONCES") || !iguales(tokens[10], "ES")) {
-            throw std::runtime_error("Error en " + rutaArchivo + ", línea " + std::to_string(numLinea) + ": Palabras clave incorrectas. Debe seguir la estructura: " "SI ... ES ... Y ... ES ... ENTONCES ... ES ...");
+        // Buscar la palabra clave ENTONCES
+        int posEntonces = -1;
+        for (std::size_t i = 1; i < tokens.size(); ++i) {
+            if (iguales(tokens[i], "ENTONCES")) {
+                posEntonces = static_cast<int>(i);
+                break;
+            }
+        }
+
+        if (posEntonces == -1) {
+            throw std::runtime_error("Error en " + rutaArchivo + ", línea " + std::to_string(numLinea) + ": Formato de regla inválido. No se encontró la palabra clave 'ENTONCES'.");
+        }
+
+        // Después de ENTONCES debe haber exactamente 3 tokens: <VarSalida> ES <ConjuntoSalida>
+        if (static_cast<std::size_t>(posEntonces + 4) != tokens.size() || !iguales(tokens[posEntonces + 2], "ES")) {
+            throw std::runtime_error("Error en " + rutaArchivo + ", línea " + std::to_string(numLinea) + ": Formato de consecuente inválido. Se esperaba: ENTONCES <VarSalida> ES <ConjuntoSalida>.");
         }
 
         try {
-            // Validar antecedente 1 (Entrada)
-            Proposition ant1 = validarYCrearProposicion(tokens[1], tokens[3], VariableType::ENTRADA, variables, numLinea);
+            // Parsear los antecedentes entre el token 1 y posEntonces
+            std::vector<Proposition> antecedentes;
+            std::size_t idx = 1;
+            while (idx < static_cast<std::size_t>(posEntonces)) {
+                if (idx + 2 >= static_cast<std::size_t>(posEntonces)) {
+                    throw std::runtime_error("Línea " + std::to_string(numLinea) + ": Formato de antecedente incompleto antes de 'ENTONCES'.");
+                }
+                std::string varNombre = tokens[idx];
+                std::string esPalabra = tokens[idx + 1];
+                std::string conjNombre = tokens[idx + 2];
 
-            // Validar antecedente 2 (Entrada)
-            Proposition ant2 = validarYCrearProposicion(tokens[5], tokens[7], VariableType::ENTRADA, variables, numLinea);
+                if (!iguales(esPalabra, "ES")) {
+                    throw std::runtime_error("Línea " + std::to_string(numLinea) + ": Se esperaba 'ES' después de '" + varNombre + "', pero se encontró '" + esPalabra + "'.");
+                }
 
-            // No pueden ser la misma variable de entrada
-            if (iguales(ant1.getVariableNombre(), ant2.getVariableNombre())) {
-                throw std::invalid_argument("Línea " + std::to_string(numLinea) + ": Los antecedentes deben corresponder a dos variables de entrada distintas.");
+                antecedentes.push_back(validarYCrearProposicion(varNombre, conjNombre, VariableType::ENTRADA, variables, numLinea));
+
+                idx += 3;
+                if (idx < static_cast<std::size_t>(posEntonces)) {
+                    if (!iguales(tokens[idx], "Y")) {
+                        throw std::runtime_error("Línea " + std::to_string(numLinea) + ": Se esperaba 'Y' entre antecedentes, pero se encontró '" + tokens[idx] + "'.");
+                    }
+                    idx += 1;
+                }
+            }
+
+            if (antecedentes.empty()) {
+                throw std::runtime_error("Línea " + std::to_string(numLinea) + ": La regla no contiene antecedentes.");
+            }
+
+            // No pueden repetirse variables de entrada dentro de los antecedentes de la misma regla
+            for (std::size_t i = 0; i < antecedentes.size(); ++i) {
+                for (std::size_t j = i + 1; j < antecedentes.size(); ++j) {
+                    if (iguales(antecedentes[i].getVariableNombre(), antecedentes[j].getVariableNombre())) {
+                        throw std::invalid_argument("Línea " + std::to_string(numLinea) + ": Los antecedentes no pueden repetir la misma variable de entrada ('" + antecedentes[i].getVariableNombre() + "').");
+                    }
+                }
             }
 
             // Validar consecuente (Salida)
-            Proposition consec = validarYCrearProposicion(tokens[9], tokens[11], VariableType::SALIDA, variables, numLinea);
+            Proposition consec = validarYCrearProposicion(tokens[posEntonces + 1], tokens[posEntonces + 3], VariableType::SALIDA, variables, numLinea);
 
-            // Asegurar consistencia entre las reglas (el sistema modela 2 entradas y 1 salida específicas)
-            if (!varEntrada1 && !varEntrada2 && !varSalida) {
+            // Asegurar consistencia entre las reglas cargadas
+            if (varsEntrada.empty() && !varSalida) {
                 // primera regla: se guardan las variables que usa el sistema
-                varEntrada1 = ant1.getVariable();
-                varEntrada2 = ant2.getVariable();
+                for (const auto& ant : antecedentes) {
+                    varsEntrada.push_back(ant.getVariable());
+                }
+                if (varsEntrada.size() >= 1) varEntrada1 = varsEntrada[0];
+                if (varsEntrada.size() >= 2) varEntrada2 = varsEntrada[1];
+                if (varsEntrada.size() >= 3) varEntrada3 = varsEntrada[2];
                 varSalida = consec.getVariable();
             } else {
-                // las demas reglas deben usar las mismas entradas (en cualquier orden) y la misma salida
-                bool ordenDirecto = (iguales(ant1.getVariableNombre(), varEntrada1->getNombre()) &&  iguales(ant2.getVariableNombre(), varEntrada2->getNombre()));
-                bool ordenInverso = (iguales(ant1.getVariableNombre(), varEntrada2->getNombre()) && iguales(ant2.getVariableNombre(), varEntrada1->getNombre()));
+                // las demas reglas deben tener la misma cantidad de antecedentes y usar las mismas variables de entrada
+                if (antecedentes.size() != varsEntrada.size()) {
+                    throw std::invalid_argument("Línea " + std::to_string(numLinea) + ": Regla inconsistente. Se esperaban " + std::to_string(varsEntrada.size()) + " antecedentes, pero tiene " + std::to_string(antecedentes.size()) + ".");
+                }
 
-                if (not ordenDirecto && not ordenInverso) {
-                    throw std::invalid_argument("Línea " + std::to_string(numLinea) + ": Regla inconsistente con las variables de entrada definidas anteriormente (" + varEntrada1->getNombre() + ", " + varEntrada2->getNombre() + ").");
+                for (const auto& ant : antecedentes) {
+                    bool encontrada = false;
+                    for (const auto* vEnt : varsEntrada) {
+                        if (iguales(ant.getVariableNombre(), vEnt->getNombre())) {
+                            encontrada = true;
+                            break;
+                        }
+                    }
+                    if (!encontrada) {
+                        throw std::invalid_argument("Línea " + std::to_string(numLinea) + ": Regla inconsistente con las variables de entrada definidas anteriormente.");
+                    }
                 }
 
                 if (!iguales(consec.getVariableNombre(), varSalida->getNombre())) {
@@ -156,7 +213,7 @@ void KnowledgeBase::cargarDesdeArchivo(const std::string& rutaArchivo, const std
 
             // el id es la cantidad de reglas + 1 (R1, R2...)
             int id = static_cast<int>(reglas.size()) + 1;
-            reglas.emplace_back(id, ant1, ant2, consec); // construye la regla directamente dentro del vector
+            reglas.emplace_back(id, antecedentes, consec);
 
         } catch (const std::invalid_argument& e) {
             // se agrega el nombre del archivo para que el error sea facil de ubicar
@@ -176,29 +233,43 @@ void KnowledgeBase::mostrarReglas() const {
     std::cout << "\n" << " Base de conocimiento difusa (" << reglas.size() << " reglas cargadas)\n";
 
     // variables del sistema si ya se cargaron reglas
-    if (varEntrada1 && varEntrada2 && varSalida) {
-        std::cout << " Entrada 1 : " << varEntrada1->getNombre() << " (" << varEntrada1->getUnidad() << ")\n" << " Entrada 2 : " << varEntrada2->getNombre() << " (" << varEntrada2->getUnidad() << ")\n" << " Salida    : " << varSalida->getNombre() << " (" << varSalida->getUnidad() << ")\n";
+    for (std::size_t i = 0; i < varsEntrada.size(); ++i) {
+        std::cout << " Entrada " << (i + 1) << " : " << varsEntrada[i]->getNombre() << " (" << varsEntrada[i]->getUnidad() << ")\n";
+    }
+    if (varSalida) {
+        std::cout << " Salida    : " << varSalida->getNombre() << " (" << varSalida->getUnidad() << ")\n";
     }
 
     // encabezado de la tabla
-    std::cout << "\n" << "   " << std::left << std::setw(6)  << "ID" << std::setw(26) << "Antecedente 1" << std::setw(26) << "Antecedente 2" << std::setw(26) << "Consecuente"  << "\n";
+    std::cout << "\n   " << std::left << std::setw(6) << "ID";
+    for (std::size_t i = 0; i < varsEntrada.size(); ++i) {
+        std::string colNombre = "Antecedente " + std::to_string(i + 1);
+        std::cout << std::setw(26) << colNombre;
+    }
+    std::cout << std::setw(26) << "Consecuente" << "\n";
 
     // una fila por regla
     for (const auto& r : reglas) {
         std::string idStr = "R" + std::to_string(r.getId());
-        std::cout << "   " << std::left << std::setw(6)  << idStr << std::setw(26) << r.getAntecedente1().toString() << std::setw(26) << r.getAntecedente2().toString() << std::setw(26) << r.getConsecuente().toString() << "\n";
+        std::cout << "   " << std::left << std::setw(6) << idStr;
+        for (const auto& ant : r.getAntecedentes()) {
+            std::cout << std::setw(26) << ant.toString();
+        }
+        std::cout << std::setw(26) << r.getConsecuente().toString() << "\n";
     }
    
 }
 
 // muestra el alpha de cada regla usando los grados de la ultima fuzzificacion
 void KnowledgeBase::mostrarActivaciones() const {
+    std::size_t anchoRegla = (varsEntrada.size() >= 3) ? 110 : 80;
 
-    std::cout << "\n" << " Activacion de reglas\n" << "\n" << "   " << std::left << std::setw(6)  << "ID" << std::setw(80) << "Regla" << std::setw(10) << "alpha   (Activacion)" << "\n";
+    std::cout << "\n Activacion de reglas\n\n";
+    std::cout << "   " << std::left << std::setw(6) << "ID" << std::setw(anchoRegla) << "Regla" << std::setw(10) << "alpha   (Activacion)" << "\n";
 
     for (const auto& r : reglas) {
         std::string idStr = "R" + std::to_string(r.getId());
-        double alpha = r.calcularActivacion(); // min de los dos antecedentes
-        std::cout << "   " << std::left  << std::setw(6)  << idStr << std::setw(80) << r.toString() << std::setw(10) << formatear(alpha, 4) << (alpha > 0.0 ? "   *" : "") << "\n"; // * si la regla se activo
+        double alpha = r.calcularActivacion(); // min de todos los antecedentes
+        std::cout << "   " << std::left << std::setw(6) << idStr << std::setw(anchoRegla) << r.toString() << std::setw(10) << formatear(alpha, 4) << (alpha > 0.0 ? "   *" : "") << "\n"; // * si la regla se activo
     }
 }
