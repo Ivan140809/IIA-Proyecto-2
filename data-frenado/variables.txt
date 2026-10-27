@@ -7,8 +7,8 @@ CONJUNTO  Lejos       TRAPEZOIDAL 60  90  120  120
 # Entrada 2: Velocidad actual del vehiculo (k/h) 
 VARIABLE  Velocidad  ENTRADA  0  100  k/h
 CONJUNTO  Lento       TRAPEZOIDAL  0   0   10   30
-CONJUNTO  Normal      TRIANGULAR   10   30   60
-CONJUNTO  Rapido       TRAPEZOIDAL  60   80  100  100
+CONJUNTO  Normal      TRIANGULAR   10   30   70
+CONJUNTO  Rapido       TRAPEZOIDAL  30   70  100  100
 
 # Salida: Fuerza de frenado del vehiculo (%)
 VARIABLE  FuerzaFrenado     SALIDA   0  100  %

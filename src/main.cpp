@@ -30,9 +30,9 @@ static void probar(const std::string& titulo, const std::string& archVar, const 
 }
 
 int main(){
-    // mismos casos de entrada sobre configuraciones con distinta cantidad de conjuntos
-    std::vector<std::pair<double, double>> casos = {{5, 1}, {25, 5}, {45, 9}, {15, 3}, {45, 1}};
-    probar("3 conjuntos por variable", "data/variables.txt", "data/rules.txt", casos); 
+    // casos del frenado: {Distancia en m, Velocidad en k/h}, mismo orden del archivo de variables
+    std::vector<std::pair<double, double>> casos = {{100, 5}, {60, 30}, {10, 90}, {45, 20}, {80, 85}};
+    probar("Frenado vehiculo autonomo 3x3 -> 5", "data-frenado/variables.txt", "data-frenado/rules.txt", casos);
 
     return 0;
 }
